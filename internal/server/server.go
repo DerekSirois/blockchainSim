@@ -2,19 +2,20 @@ package server
 
 import (
 	"blockchainSim/internal/db"
+	"blockchainSim/internal/services/account"
 	"log"
 	"net/http"
-
-	"github.com/jmoiron/sqlx"
 )
 
 type Server struct {
-	db *sqlx.DB
+	accountHandler *account.Handler
 }
 
 func New() *Server {
+	database := db.InitDb()
+	accountStore := account.NewStore(database)
 	return &Server{
-		db: db.InitDb(),
+		accountHandler: account.NewHandler(accountStore),
 	}
 }
 
